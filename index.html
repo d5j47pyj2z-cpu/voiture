@@ -4,27 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#17365D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="./manifest.json">
 <link rel="stylesheet" href="./style.css">
 <title>Mes Véhicules</title>
 </head>
 <body>
-<header>
-  <h1>🚗 Mes Véhicules</h1>
-  <p>Carnet d'entretien personnel</p>
+<header class="app-header">
+  <div><h1>🚗 Mes Véhicules</h1><p>Carnet d'entretien personnel</p></div>
 </header>
-<nav class="tabs">
-  <button data-tab="dashboard" class="active">📊 Tableau de bord</button>
-  <button data-tab="vehicles">🚘 Véhicules</button>
-  <button data-tab="maintenance">🔧 Entretien</button>
-  <button data-tab="cleaning">🧽 Nettoyage</button>
-  <button data-tab="expenses">💶 Dépenses</button>
-  <button data-tab="invoices">📄 Factures</button>
-  <button data-tab="deadlines">📅 Échéances</button>
-</nav>
-<main>
+
+<main id="appMain">
 <section id="dashboard" class="tab active">
-  <div class="card hero"><h2>Mon garage</h2><p id="dashIntro">Gère facilement tes véhicules personnels.</p></div>
+  <div class="card hero"><h2>Mon garage</h2><p>Gère facilement tes véhicules personnels.</p></div>
   <div class="cards">
     <div class="metric"><span>Véhicules</span><b id="mVehicles">0</b></div>
     <div class="metric"><span>Dépenses totales</span><b id="mCosts">0 €</b></div>
@@ -36,40 +29,53 @@
 </section>
 
 <section id="vehicles" class="tab">
-  <div class="section-head"><h2>🚘 Mes véhicules</h2><button class="primary" onclick="openVehicle()">+ Ajouter</button></div>
+  <div class="section-head"><h2>🚘 Mes véhicules</h2><button class="primary" data-action="vehicle">+ Ajouter</button></div>
   <div id="vehicleList" class="grid"></div>
 </section>
 
 <section id="maintenance" class="tab">
-  <div class="section-head"><h2>🔧 Carnet d'entretien</h2><button class="primary" onclick="openMaintenance()">+ Entretien</button></div>
+  <div class="section-head"><h2>🔧 Carnet d'entretien</h2><button class="primary" data-action="maintenance">+ Entretien</button></div>
   <div id="maintenanceList"></div>
 </section>
 
 <section id="cleaning" class="tab">
-  <div class="section-head"><h2>🧽 Nettoyage intérieur / extérieur</h2><button class="primary" onclick="openCleaning()">+ Nettoyage</button></div>
+  <div class="section-head"><h2>🧽 Nettoyage</h2><button class="primary" data-action="cleaning">+ Nettoyage</button></div>
   <div id="cleaningList"></div>
 </section>
 
 <section id="expenses" class="tab">
-  <div class="section-head"><h2>💶 Dépenses</h2><button class="primary" onclick="openExpense()">+ Dépense</button></div>
+  <div class="section-head"><h2>💶 Dépenses</h2><button class="primary" data-action="expense">+ Dépense</button></div>
   <div id="expenseList"></div>
 </section>
 
 <section id="invoices" class="tab">
-  <div class="section-head"><h2>📄 Factures numérisées</h2><button class="primary" onclick="openInvoice()">+ Facture</button></div>
-  <div class="notice">Les factures peuvent être ajoutées comme photo/PDF. Elles restent stockées dans ce navigateur. Fais régulièrement une sauvegarde.</div>
+  <div class="section-head"><h2>📄 Factures</h2><button class="primary" data-action="invoice">+ Facture</button></div>
+  <div class="notice">Les photos/PDF sont stockés localement sur cet appareil. Pense à exporter tes données régulièrement.</div>
   <div id="invoiceList"></div>
 </section>
 
 <section id="deadlines" class="tab">
-  <div class="section-head"><h2>📅 Échéances</h2><button class="primary" onclick="openDeadline()">+ Échéance</button></div>
+  <div class="section-head"><h2>📅 Échéances</h2><button class="primary" data-action="deadline">+ Échéance</button></div>
   <div id="deadlineList"></div>
 </section>
 </main>
 
-<div id="modal" class="modal"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
-<input id="fileInput" type="file" accept="image/*,application/pdf" hidden>
+<nav class="bottom-nav" aria-label="Navigation principale">
+  <button data-tab="dashboard" class="active"><span>📊</span><small>Accueil</small></button>
+  <button data-tab="vehicles"><span>🚘</span><small>Véhicules</small></button>
+  <button data-tab="maintenance"><span>🔧</span><small>Entretien</small></button>
+  <button data-tab="cleaning"><span>🧽</span><small>Nettoyage</small></button>
+  <button data-tab="expenses"><span>💶</span><small>Dépenses</small></button>
+  <button data-tab="invoices"><span>📄</span><small>Factures</small></button>
+  <button data-tab="deadlines"><span>📅</span><small>Échéances</small></button>
+</nav>
 
-<script src="./app.js"></script>
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="modalbox" role="dialog" aria-modal="true">
+    <button class="close" data-action="close" aria-label="Fermer">×</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+<script src="./app.js" defer></script>
 </body>
 </html>
