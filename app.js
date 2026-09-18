@@ -23,8 +23,46 @@ document.addEventListener("click",e=>{
 });
 
 document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
-function modal(html){const m=document.getElementById("modal");document.getElementById("modalContent").innerHTML=html;m.classList.add("show");m.setAttribute("aria-hidden","false");setTimeout(()=>document.querySelector("#modalContent input, #modalContent select, #modalContent textarea")?.focus(),50)}
-function closeModal(){const m=document.getElementById("modal");m.classList.remove("show");m.setAttribute("aria-hidden","true");document.getElementById("modalContent").innerHTML=""}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape" && document.getElementById("modal").classList.contains("show")) closeModal();
+});
+
+function modal(html){
+  const m=document.getElementById("modal");
+  const box=m.querySelector(".modalbox");
+  document.getElementById("modalContent").innerHTML=html;
+
+  // Reset both scroll containers. Without this, iOS Safari can reopen a
+  // long form at the previous scroll position, hiding the top of the form.
+  m.scrollTop=0;
+  if(box) box.scrollTop=0;
+
+  m.classList.add("show");
+  m.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+
+  requestAnimationFrame(()=>{
+    m.scrollTop=0;
+    if(box) box.scrollTop=0;
+    setTimeout(()=>{
+      const first=document.querySelector("#modalContent input, #modalContent select, #modalContent textarea");
+      if(first && first.type!=="file") first.focus({preventScroll:true});
+      m.scrollTop=0;
+      if(box) box.scrollTop=0;
+    },50);
+  });
+}
+function closeModal(){
+  const m=document.getElementById("modal");
+  m.classList.remove("show");
+  m.setAttribute("aria-hidden","true");
+  document.getElementById("modalContent").innerHTML="";
+  document.body.classList.remove("modal-open");
+  m.scrollTop=0;
+  const box=m.querySelector(".modalbox");
+  if(box) box.scrollTop=0;
+}
 function selectVehicles(selected=""){return `<select id="vehicle" required><option value="">Choisir…</option>${db.vehicles.map(v=>`<option value="${esc(v.id)}" ${v.id===selected?"selected":""}>${esc(`${v.marque||""} ${v.modele||""} — ${v.immat||""}`)}</option>`).join("")}</select>`}
 
 function openVehicle(){modal(`<h2>Ajouter un véhicule</h2><div class="form"><div class="two"><label>Marque<input id="marque" required></label><label>Modèle<input id="modele" required></label></div><div class="two"><label>Version<input id="version"></label><label>Immatriculation<input id="immat"></label></div><div class="two"><label>VIN<input id="vin"></label><label>Année<input id="annee" type="number" inputmode="numeric"></label></div><div class="two"><label>Kilométrage actuel<input id="km" type="number" inputmode="numeric"></label><label>Carburant<select id="fuel"><option>Diesel</option><option>Essence</option><option>Hybride</option><option>Électrique</option><option>GPL</option></select></label></div><div class="two"><label>Mise en circulation<input id="mise" type="date"></label><label>Échéance assurance<input id="assurance" type="date"></label></div><div class="two"><label>Échéance CT<input id="ct" type="date"></label><label>Nettoyage intérieur (jours)<input id="intfreq" type="number" value="30"></label></div><label>Nettoyage extérieur (jours)<input id="extfreq" type="number" value="14"></label><label>Notes<textarea id="notes"></textarea></label><button data-form="vehicle">Enregistrer</button></div>`)}
